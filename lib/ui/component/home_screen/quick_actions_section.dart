@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offline_first_aid_app/ui/component/home_screen/section_title.dart';
+import 'package:offline_first_aid_app/ui/screens/hospital_map_screen.dart';
+import 'package:offline_first_aid_app/ui/screens/emergency_screen.dart';
 
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({super.key});
@@ -17,8 +19,8 @@ class QuickActionsSection extends StatelessWidget {
           icon: Icons.local_hospital_rounded,
           accent: const Color(0xFF2E9B59),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('የቅርብ ሆስፒታል ፍለጋ በቅርቡ ይጨመራል')),
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const HospitalMapScreen()),
             );
           },
         ),
@@ -29,9 +31,9 @@ class QuickActionsSection extends StatelessWidget {
           icon: Icons.call_rounded,
           accent: const Color(0xFFE14949),
           onTap: () {
-            ScaffoldMessenger.of(
+            Navigator.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text('የአደጋ ጥሪ በቅርቡ ይገናኛል')));
+            ).push(MaterialPageRoute(builder: (_) => const EmergencyScreen()));
           },
         ),
       ],

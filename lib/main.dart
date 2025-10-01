@@ -1,28 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Data Layer
 import 'package:offline_first_aid_app/features/guides/data/datasources/guide_local_datasource.dart';
 import 'package:offline_first_aid_app/features/guides/data/repositories/guide_repository_impl.dart';
+import 'package:offline_first_aid_app/features/hospitals/data/repositories/hospital_repository_impl.dart';
+import 'package:offline_first_aid_app/core/services/map_download_service.dart';
 
 // BLoC
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_bloc.dart';
+import 'package:offline_first_aid_app/features/hospitals/presentation/bloc/hospital_bloc.dart';
 
 // REAL UI
 import 'package:offline_first_aid_app/ui/screens/home_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Hive.initFlutter();
 
-  final dataSource = GuideLocalDataSource();
-  final repository = GuideRepositoryImpl(dataSource);
+    // Mock map download on first run
+    final mapService = MapDownloadService();
+    await mapService.downloadMapTiles();
 
-  runApp(
-    BlocProvider(
-      create: (_) => GuideBloc(repository),
-      child: const MyApp(),
-    ),
-  );
+    final dataSource = GuideLocalDataSource();
+    final guideRepository = GuideRepositoryImpl(dataSource);
+    final hospitalRepository = HospitalRepositoryImpl();
+
+    runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => GuideBloc(guideRepository)),
+          BlocProvider(create: (_) => HospitalBloc(hospitalRepository)),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  } catch (e, stacktrace) {
+    debugPrint('Critical Error during app start: $e');
+    debugPrint(stacktrace.toString());
+    // Fallback app to show error if possible
+    runApp(
+      MaterialApp(
+        home: Scaffold(body: Center(child: Text('App failed to start: $e'))),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
