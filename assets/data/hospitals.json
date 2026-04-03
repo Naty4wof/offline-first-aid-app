@@ -1,0 +1,52 @@
+{
+  "hospitals": [
+    {
+      "id": "hosp_001",
+      "name": "Black Lion Specialized Hospital (Tikur Anbessa)",
+      "latitude": 9.0182,
+      "longitude": 38.7512,
+      "address": "Addis Ababa, Ethiopia",
+      "phone": "+251 11 551 1211"
+    },
+    {
+      "id": "hosp_002",
+      "name": "St. Paul's Hospital Millennium Medical College",
+      "latitude": 9.0435,
+      "longitude": 38.7303,
+      "address": "Addis Ababa, Ethiopia",
+      "phone": "+251 11 275 0125"
+    },
+    {
+      "id": "hosp_003",
+      "name": "Zewditu Memorial Hospital",
+      "latitude": 9.0175,
+      "longitude": 38.7618,
+      "address": "Addis Ababa, Ethiopia",
+      "phone": "+251 11 551 8085"
+    },
+    {
+      "id": "hosp_004",
+      "name": "Landmark General Hospital",
+      "latitude": 9.0112,
+      "longitude": 38.7545,
+      "address": "Addis Ababa, Ethiopia",
+      "phone": "+251 11 552 5463"
+    },
+    {
+      "id": "hosp_005",
+      "name": "Hayat Hospital",
+      "latitude": 8.9958,
+      "longitude": 38.7842,
+      "address": "Bole, Addis Ababa, Ethiopia",
+      "phone": "+251 11 661 4250"
+    },
+    {
+      "id": "hosp_006",
+      "name": "Adama general hospital",
+      "latitude": 8.560754,
+      "longitude": 39.283143,
+      "address": "04, Adama, Ethiopia",
+      "phone": "0221129673"
+    }
+  ]
+}
