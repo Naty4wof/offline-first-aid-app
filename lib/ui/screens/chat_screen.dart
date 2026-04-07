@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_first_aid_app/features/guides/domain/services/chat_service.dart';
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_bloc.dart';
+import 'package:offline_first_aid_app/core/services/storage_service.dart';
 import '../component/chat/chat_message.dart';
 import '../component/chat/message_bubble.dart';
 import '../component/chat/suggestion_chips.dart';
@@ -16,7 +17,8 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [
     const ChatMessage(
@@ -27,9 +29,14 @@ class _ChatScreenState extends State<ChatScreen> {
   ];
 
   late final ChatService _chatService;
+  final ScrollController _scrollController = ScrollController();
+  bool _isTyping = false;
+  late final AnimationController _typingController;
 
   @override
   void dispose() {
+    _scrollController.dispose();
+    _typingController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -47,6 +54,23 @@ class _ChatScreenState extends State<ChatScreen> {
         _sendMessage(widget.initialMessage!);
       }
     });
+    _typingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat();
+
+    // load persisted chat history if any
+    try {
+      final stored = StorageService.instance.getChatMessages();
+      if (stored.isNotEmpty) {
+        _messages.clear();
+        _messages.addAll(stored);
+        // ensure list shows last message
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      }
+    } catch (_) {
+      // ignore storage errors for now
+    }
   }
 
   Future<void> _sendMessage(String input) async {
@@ -56,8 +80,15 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       _messages.add(ChatMessage(isUser: true, text: text));
     });
+    // persist user message
+    try {
+      StorageService.instance.saveChatMessage(
+        ChatMessage(isUser: true, text: text),
+      );
+    } catch (_) {}
 
     _controller.clear();
+    _scrollToBottom();
 
     // Quick local intents: greetings, thanks, help — respond immediately in Amharic
     final lower = text.toLowerCase();
@@ -68,59 +99,71 @@ class _ChatScreenState extends State<ChatScreen> {
     bool _containsAny(List<String> words) =>
         words.any((w) => lower.contains(w));
 
+    // Show a typing indicator for 2 seconds before responding
+    setState(() => _isTyping = true);
+    _scrollToBottom();
+    await Future.delayed(const Duration(seconds: 2));
+
     if (_containsAny(greetings)) {
-      setState(() {
-        _messages.add(
-          const ChatMessage(
-            isUser: false,
-            text:
-                'ሰላም! እንኳን ደህና መጡ። እባክዎ የአደጋውን ሁኔታ ይጻፉ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
-            isImportant: false,
-          ),
-        );
-      });
+      final msg = const ChatMessage(
+        isUser: false,
+        text: 'ሰላም! እንኳን ደህና መጡ። እባክዎ የአደጋውን ሁኔታ ይጻፉ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
+        isImportant: false,
+      );
+      setState(() => _messages.add(msg));
+      try {
+        StorageService.instance.saveChatMessage(msg);
+      } catch (_) {}
+      setState(() => _isTyping = false);
+      _scrollToBottom();
       return;
     }
 
     if (_containsAny(thanks)) {
-      setState(() {
-        _messages.add(
-          const ChatMessage(
-            isUser: false,
-            text: 'እናመሰግናለን — ይህ እንደረገው ደግሞ እንደሚፈልጉ እንደሚሆን ይጠይቁ።',
-            isImportant: false,
-          ),
-        );
-      });
+      final msg = const ChatMessage(
+        isUser: false,
+        text: 'እናመሰግናለን — ይህ እንደረገው ደግሞ እንደሚፈልጉ እንደሚሆን ይጠይቁ።',
+        isImportant: false,
+      );
+      setState(() => _messages.add(msg));
+      try {
+        StorageService.instance.saveChatMessage(msg);
+      } catch (_) {}
+      setState(() => _isTyping = false);
+      _scrollToBottom();
       return;
     }
 
     if (_containsAny(help)) {
-      setState(() {
-        _messages.add(
-          const ChatMessage(
-            isUser: false,
-            text: 'እባክዎ የእርዳታ ዓይነት ይገልጹ — ለምሳሌ "ደም መደምሰስ" ወይም "ቃጠሎ" ይጻፉ።',
-            isImportant: false,
-          ),
-        );
-      });
+      final msg = const ChatMessage(
+        isUser: false,
+        text: 'እባክዎ የእርዳታ ዓይነት ይገልጹ — ለምሳሌ "ደም መደምሰስ" ወይም "ቃጠሎ" ይጻፉ።',
+        isImportant: false,
+      );
+      setState(() => _messages.add(msg));
+      try {
+        StorageService.instance.saveChatMessage(msg);
+      } catch (_) {}
+      setState(() => _isTyping = false);
+      _scrollToBottom();
       return;
     }
 
     final result = await _chatService.match(text);
 
     if (result.injury == null) {
-      setState(() {
-        _messages.add(
-          ChatMessage(
-            isUser: false,
-            text:
-                'ይቅርታ — የሚመሳሰሉ ጉዳቶች አልተገኙም። እባክዎ በተለዋዋጭ ቃላት ይሞክሩ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
-            isImportant: true,
-          ),
-        );
-      });
+      final msg = ChatMessage(
+        isUser: false,
+        text:
+            'ይቅርታ — የሚመሳሰሉ ጉዳቶች አልተገኙም። እባክዎ በተለዋዋጭ ቃላት ይሞክሩ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
+        isImportant: true,
+      );
+      setState(() => _messages.add(msg));
+      try {
+        StorageService.instance.saveChatMessage(msg);
+      } catch (_) {}
+      setState(() => _isTyping = false);
+      _scrollToBottom();
       return;
     }
 
@@ -135,10 +178,30 @@ class _ChatScreenState extends State<ChatScreen> {
       buffer.writeln('ለዚህ ጉዳት ዝርዝር እርምጃዎች አልተገኙም።');
     }
 
+    final msg = ChatMessage(
+      isUser: false,
+      text: buffer.toString(),
+      isImportant: true,
+    );
     setState(() {
-      _messages.add(
-        ChatMessage(isUser: false, text: buffer.toString(), isImportant: true),
-      );
+      _messages.add(msg);
+      _isTyping = false;
+    });
+    try {
+      StorageService.instance.saveChatMessage(msg);
+    } catch (_) {}
+    _scrollToBottom();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -165,12 +228,58 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+                controller: _scrollController,
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   return MessageBubble(message: _messages[index]);
                 },
               ),
             ),
+            // typing indicator
+            if (_isTyping)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.more_horiz,
+                          size: 16,
+                          color: Color(0xFF6B7880),
+                        ),
+                        const SizedBox(width: 6),
+                        AnimatedBuilder(
+                          animation: _typingController,
+                          builder: (context, child) {
+                            final t = (_typingController.value * 3).floor() + 1;
+                            final dots = List.filled(t, '.').join();
+                            return Text(
+                              dots,
+                              style: const TextStyle(
+                                color: Color(0xFF6B7880),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
             InputBar(
               controller: _controller,
               onSend: _sendMessage,

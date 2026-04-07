@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:offline_first_aid_app/ui/screens/chat_screen.dart';
+import 'package:offline_first_aid_app/ui/screens/category_screen.dart';
 import 'package:offline_first_aid_app/ui/component/home_screen/search_section.dart';
 import 'package:offline_first_aid_app/ui/component/home_screen/category_section.dart';
 import 'package:offline_first_aid_app/ui/component/home_screen/quick_actions_section.dart';
@@ -119,16 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
       bottomNavigationBar: HomeBottomNav(
         onGuidesTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('እባክዎ ከምድብ ጀምሩ'),
-            ),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const CategoryScreen()));
         },
         onChatTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const ChatScreen()),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const ChatScreen()));
         },
       ),
     );

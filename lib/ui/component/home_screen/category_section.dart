@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_first_aid_app/ui/component/home_screen/section_title.dart';
 import 'package:offline_first_aid_app/ui/screens/injury_screen.dart';
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_bloc.dart';
+import 'package:offline_first_aid_app/ui/screens/category_screen.dart';
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_event.dart';
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_state.dart';
 
@@ -24,28 +25,52 @@ class CategorySection extends StatelessWidget {
             }
 
             if (state is CategoryLoaded) {
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.categories.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.25,
-                ),
-                itemBuilder: (context, index) {
-                  final category = state.categories[index];
+              final categories = state.categories;
+              final showCount = categories.length > 4 ? 4 : categories.length;
+              final visible = categories.take(showCount).toList();
 
-                  final ui = _mapCategoryToUI(category.name);
+              return Column(
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: visible.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 1.25,
+                        ),
+                    itemBuilder: (context, index) {
+                      final category = visible[index];
 
-                  return CategoryCard(
-                    id: category.id,
-                    title: category.name,
-                    icon: ui.icon,
-                    color: ui.color,
-                  );
-                },
+                      final ui = _mapCategoryToUI(category.name);
+
+                      return CategoryCard(
+                        id: category.id,
+                        title: category.name,
+                        icon: ui.icon,
+                        color: ui.color,
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const CategoryScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('ደጋፊ ይመልከቱ'),
+                    ),
+                  ),
+                ],
               );
             }
 
