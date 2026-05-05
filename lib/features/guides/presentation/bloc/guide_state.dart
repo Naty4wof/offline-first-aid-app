@@ -45,3 +45,8 @@ class SearchLoaded extends GuideState {
     required this.guides,
   });
 }
+
+class FavoritesLoaded extends GuideState {
+  final List<InjuryModel> injuries;
+  FavoritesLoaded(this.injuries);
+}

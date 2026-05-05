@@ -21,3 +21,10 @@ class SearchQuery extends GuideEvent {
 
   SearchQuery(this.query);
 }
+
+class ToggleFavorite extends GuideEvent {
+  final String injuryId;
+  ToggleFavorite(this.injuryId);
+}
+
+class LoadFavorites extends GuideEvent {}

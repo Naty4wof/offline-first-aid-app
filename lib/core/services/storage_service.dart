@@ -8,6 +8,7 @@ class StorageService {
   Future<void> init() async {
     await Hive.openBox('chat_history');
     await Hive.openBox('user');
+    await Hive.openBox('favorites');
   }
 
   // Chat history (store as simple Map entries)
@@ -60,5 +61,25 @@ class StorageService {
   bool hasUserProfile() {
     final box = Hive.box('user');
     return box.containsKey('profile');
+  }
+
+  // Favorites
+  Future<void> toggleFavorite(String id) async {
+    final box = Hive.box('favorites');
+    if (box.containsKey(id)) {
+      await box.delete(id);
+    } else {
+      await box.put(id, true);
+    }
+  }
+
+  bool isFavorite(String id) {
+    final box = Hive.box('favorites');
+    return box.containsKey(id);
+  }
+
+  List<String> getFavorites() {
+    final box = Hive.box('favorites');
+    return box.keys.cast<String>().toList();
   }
 }
