@@ -152,6 +152,8 @@
     {
       "id": "guide_burn_minor",
       "injuryId": "burn_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ቀላል ቃጠሎ",
       "description": "ቀላል ቃጠሎ በፍጥነት ከተከለከለ በቀላሉ ይፈወሳል።",
       "symptoms": ["ቀይ ቆዳ", "ህመም", "ትንሽ መገርጣት", "ቀላል እብጠት"],
@@ -173,6 +175,8 @@
     {
       "id": "guide_burn_severe",
       "injuryId": "burn_severe",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ከባድ ቃጠሎ",
       "description": "ከባድ ቃጠሎ ጥልቅ የቆዳ እና የሕብረ ሕዋሳትን ሊጎዳ የሚችል እና ለሕይወት አስጊ ሊሆን የሚችል የሕክምና ድንገተኛ አደጋ ነው።",
       "symptoms": ["ነጭ, የተቃጠለ ወይም ጥቁር ቆዳ", "ከፍተኛ ጉዳት", "ህመም ወይም ህመም አለመስማት"],
@@ -195,6 +199,8 @@
     {
       "id": "guide_bleeding_minor",
       "injuryId": "bleeding_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ቀላል ደም መፍሰስ",
       "description": "ቀላል ደም መፍሰስ በቀላሉ ሊቆም ይችላል።",
       "symptoms": ["ትንሽ ደም", "ቁስል"],
@@ -208,6 +214,8 @@
     {
       "id": "guide_bleeding_severe",
       "injuryId": "bleeding_severe",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ከባድ ደም መፍሰስ",
       "description": "ከባድ ደም መፍሰስ አደገኛ ነው።",
       "symptoms": ["ብዙ ደም", "ድካም"],
@@ -221,6 +229,8 @@
     {
       "id": "guide_choking",
       "injuryId": "choking_adult",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "መታፈን",
       "description": "መታፈን ፈጣን እርዳታ ይፈልጋል።",
       "symptoms": ["መተንፈስ አለመቻል", "እጅ ወደ አንገት", "ድምፅ አለመውጣት"],
@@ -234,6 +244,8 @@
     {
       "id": "guide_breathing",
       "injuryId": "breathing_difficulty",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "መተንፈስ ችግር",
       "description": "መተንፈስ ችግር አስቸኳይ ሁኔታ ነው።",
       "symptoms": ["አየር ማጣት", "ፈጣን መተንፈስ", "ከንፈር ሰማያዊ መሆን"],
@@ -252,6 +264,8 @@
     {
       "id": "guide_fracture",
       "injuryId": "fracture_basic",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "አጥንት መሰበር",
       "description": "አጥንት መሰበር ከባድ ጉዳት ሲሆን ፈጣን እና ትክክለኛ እርዳታ ያስፈልጋል።",
       "symptoms": ["ከፍተኛ ህመም", "እብጠት", "መንቀሳቀስ አለመቻል", "ቅርጽ መቀየር"],
@@ -270,6 +284,8 @@
     {
       "id": "guide_sprain_minor",
       "injuryId": "sprain",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ቀላል መጨናነቅ (Sprain)",
       "description": "መጨናነቅ የጅማት መጎዳት ሲሆን በብዛት በእግር ወይም በእጅ ይከሰታል።",
       "symptoms": ["ህመም", "እብጠት", "መንቀሳቀስ መቸገር"],
@@ -288,6 +304,8 @@
     {
       "id": "guide_cut_minor",
       "injuryId": "cut_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ቀላል ቁስል",
       "description": "ቀላል ቁስል በቆዳ ላይ የሚፈጠር ነው እና በቀላሉ ሊድን ይችላል።",
       "symptoms": ["ትንሽ ደም መፍሰስ", "ትንሽ ህመም"],
@@ -306,6 +324,8 @@
     {
       "id": "guide_deep_cut",
       "injuryId": "cut_deep",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "ጥልቅ ቁስል",
       "description": "ጥልቅ ቁስል ብዙ ደም ሊፈስ ይችላል እና ፈጣን እርዳታ ያስፈልጋል።",
       "symptoms": ["ብዙ ደም", "ጥልቅ ቁስል", "ህመም"],
@@ -319,6 +339,8 @@
     {
       "id": "guide_poison",
       "injuryId": "poison_ingestion",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "መመረዝ",
       "description": "መመረዝ አደገኛ ነው እና ፈጣን እርዳታ ያስፈልጋል።",
       "symptoms": ["ማስታወክ", "ራስ ምታት", "ራስ ማዞር", "ንቃት መጥፋት"],
@@ -337,6 +359,8 @@
     {
       "id": "guide_fainting",
       "injuryId": "fainting",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "መውደቅ (Fainting)",
       "description": "መውደቅ ጊዜያዊ የንቃት መጥፋት ሲሆን ብዙ ጊዜ በደም ግፊት መቀነስ ይከሰታል።",
       "symptoms": ["ድካም", "ራስ ማዞር", "መውደቅ"],
@@ -355,6 +379,8 @@
     {
       "id": "guide_seizure",
       "injuryId": "seizure",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "መንቀጥቀጥ",
       "description": "መንቀጥቀጥ አስቸኳይ ሁኔታ ሲሆን ተጎጂውን ከጉዳት መጠበቅ አስፈላጊ ነው።",
       "symptoms": ["አካል መንቀጥቀጥ", "መውደቅ", "ንቃት መጥፋት"],
@@ -373,6 +399,8 @@
     {
       "id": "guide_snake_bite",
       "injuryId": "snake_bite",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "የእባብ ንክሻ",
       "description": "የእባብ ንክሻ አደገኛ ነው እና ፈጣን እርዳታ ያስፈልጋል።",
       "symptoms": ["ህመም", "እብጠት", "የንክሻ ምልክት", "ራስ ማዞር"],
@@ -391,6 +419,8 @@
     {
       "id": "guide_insect_sting",
       "injuryId": "insect_sting",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
       "title": "የነፍሳት ንክሻ",
       "description": "የነፍሳት ንክሻ ብዙ ጊዜ ቀላል ሲሆን አንዳንድ ጊዜ አለርጂ ሊያስከትል ይችላል።",
       "symptoms": ["ህመም", "እብጠት", "ማሳከክ"],
