@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:offline_first_aid_app/core/services/storage_service.dart';
 
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_bloc.dart';
 import 'package:offline_first_aid_app/features/guides/presentation/bloc/guide_event.dart';
@@ -20,10 +22,35 @@ class FirstAidGuideScreen extends StatefulWidget {
 }
 
 class _FirstAidGuideScreenState extends State<FirstAidGuideScreen> {
+  late AudioPlayer _audioPlayer;
+  bool _isPlaying = false;
+
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          _isPlaying = state == PlayerState.playing;
+        });
+      }
+    });
     context.read<GuideBloc>().add(LoadGuidesByInjury(widget.injuryId));
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _toggleAudio(String path) async {
+    if (_isPlaying) {
+      await _audioPlayer.pause();
+    } else {
+      await _audioPlayer.play(AssetSource(path.replaceFirst('assets/', '')));
+    }
   }
 
   @override
@@ -35,6 +62,23 @@ class _FirstAidGuideScreenState extends State<FirstAidGuideScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              StorageService.instance.isFavorite(widget.injuryId)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: StorageService.instance.isFavorite(widget.injuryId)
+                  ? Colors.red
+                  : null,
+            ),
+            onPressed: () {
+              setState(() {
+                context.read<GuideBloc>().add(ToggleFavorite(widget.injuryId));
+              });
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<GuideBloc, GuideState>(
         builder: (context, state) {
@@ -48,7 +92,35 @@ class _FirstAidGuideScreenState extends State<FirstAidGuideScreen> {
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                if (guide.imagePath != null)
+                  Container(
+                    height: 200,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      image: DecorationImage(
+                        image: AssetImage(guide.imagePath!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 _header(guide.title),
+                if (guide.audioPath != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: ElevatedButton.icon(
+                      onPressed: () => _toggleAudio(guide.audioPath!),
+                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                      label: Text(_isPlaying ? "አቁም" : "ያዳምጡ (Audio)"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2E9B59),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
 
                 _cardSection(
                   title: "መግለጫ",

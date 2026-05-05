@@ -65,6 +65,7 @@ class ChatServiceImpl implements ChatService {
       'ደም መፍሰስ',
       'አይቆም',
       'ብዙ ደም',
+      'ተከሰተ',
     ],
 
     'breathing': [
@@ -199,6 +200,16 @@ class ChatServiceImpl implements ChatService {
 
     final maxScore = sorted.first.value;
     final double confidence = ((maxScore / 20).clamp(0.0, 1.0)).toDouble();
+
+    // If confidence is too low, we treat it as unclear (FR-10)
+    if (confidence < 0.3) {
+      return ChatResult(
+        injury: null,
+        steps: [],
+        suggestions: sorted.take(3).map((e) => e.key).toList(),
+        confidence: confidence,
+      );
+    }
 
     return ChatResult(
       injury: best,

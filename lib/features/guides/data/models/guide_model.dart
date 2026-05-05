@@ -12,6 +12,9 @@ class GuideModel {
   final List<String> dos;
   final List<String> donts;
 
+  final String? imagePath;
+  final String? audioPath;
+
   GuideModel({
     required this.id,
     required this.injuryId,
@@ -24,6 +27,8 @@ class GuideModel {
     required this.explanation,
     required this.dos,
     required this.donts,
+    this.imagePath,
+    this.audioPath,
   });
 
   factory GuideModel.fromJson(Map<String, dynamic> json) {
@@ -31,7 +36,6 @@ class GuideModel {
       id: json['id'],
       injuryId: json['injuryId'],
       title: json['title'],
-
       description: json['description'] ?? '',
       symptoms: List<String>.from(json['symptoms'] ?? []),
       steps: List<String>.from(json['steps'] ?? []),
@@ -40,6 +44,8 @@ class GuideModel {
       explanation: json['explanation'] ?? '',
       dos: List<String>.from(json['dos'] ?? []),
       donts: List<String>.from(json['donts'] ?? []),
+      imagePath: json['imagePath'],
+      audioPath: json['audioPath'],
     );
   }
 }

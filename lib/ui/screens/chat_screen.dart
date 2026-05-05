@@ -51,7 +51,11 @@ class _ChatScreenState extends State<ChatScreen>
 
       if (widget.initialMessage != null &&
           widget.initialMessage!.trim().isNotEmpty) {
-        _sendMessage(widget.initialMessage!);
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (mounted) {
+            _sendMessage(widget.initialMessage!);
+          }
+        });
       }
     });
     _typingController = AnimationController(
@@ -152,10 +156,15 @@ class _ChatScreenState extends State<ChatScreen>
     final result = await _chatService.match(text);
 
     if (result.injury == null) {
+      final buffer = StringBuffer();
+      buffer.writeln('ይቅርታ — የሚመሳሰሉ ጉዳቶች በትክክል አልተገኙም። እነዚህን ይሞክሩ:');
+      for (final s in result.suggestions) {
+        buffer.writeln('• ${s.title}');
+      }
+
       final msg = ChatMessage(
         isUser: false,
-        text:
-            'ይቅርታ — የሚመሳሰሉ ጉዳቶች አልተገኙም። እባክዎ በተለዋዋጭ ቃላት ይሞክሩ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
+        text: buffer.toString(),
         isImportant: true,
       );
       setState(() => _messages.add(msg));
