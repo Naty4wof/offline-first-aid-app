@@ -1,5 +1,4 @@
 import 'package:latlong2/latlong.dart';
-import '../../data/models/hospital_model.dart';
 
 abstract class HospitalEvent {}
 

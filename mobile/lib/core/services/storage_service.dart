@@ -61,4 +61,14 @@ class StorageService {
     final box = Hive.box('user');
     return box.containsKey('profile');
   }
+
+  bool hasSeenWelcome() {
+    final box = Hive.box('user');
+    return box.get('has_seen_welcome') == true;
+  }
+
+  Future<void> setHasSeenWelcome() async {
+    final box = Hive.box('user');
+    await box.put('has_seen_welcome', true);
+  }
 }

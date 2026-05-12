@@ -106,9 +106,54 @@ class ChatServiceImpl implements ChatService {
     'bite': ['bite', 'snake', 'insect', 'ንክሻ', 'እባብ', 'ነፍሳት'],
   };
 
+  final List<String> _bodyParts = [
+    'head',
+    'face',
+    'eye',
+    'arm',
+    'leg',
+    'hand',
+    'foot',
+    'chest',
+    'stomach',
+    'back',
+    'neck',
+    'ራስ',
+    'ፊት',
+    'ዓይን',
+    'እጅ',
+    'እግር',
+    'ደረት',
+    'ሆድ',
+    'ጀርባ',
+    'አንገት',
+  ];
+
+  final List<String> _severeTokens = [
+    'severe',
+    'bleeding heavily',
+    'not breathing',
+    'unconscious',
+    'passed out',
+    'አይተነፍስም',
+    'ብዙ ደም',
+    'አይቆም',
+    'ማስታወቂያ ጠፍቷል',
+    'አይነቃም',
+  ];
+
+  String _normalize(String input) {
+    final cleaned = input
+        .toLowerCase()
+        .replaceAll(RegExp(r'[\p{P}\p{S}]', unicode: true), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+    return cleaned;
+  }
+
   @override
   Future<ChatResult> match(String input) async {
-    final q = input.toLowerCase();
+    final q = _normalize(input);
 
     final words = q
         .split(RegExp(r'\s+'))
@@ -122,18 +167,31 @@ class ChatServiceImpl implements ChatService {
 
     for (final injury in injuries) {
       double score = 0;
+      int titleHits = 0;
+      int keywordHits = 0;
+      int conceptHits = 0;
+      int bodyHits = 0;
 
       final title = injury.title.toLowerCase();
 
-      if (q.contains(title)) score += 8;
+      if (q.contains(title)) {
+        score += 8;
+        titleHits += 1;
+      }
 
       for (final keyword in injury.keywords) {
         final k = keyword.toLowerCase();
 
-        if (q.contains(k)) score += 5;
+        if (q.contains(k)) {
+          score += 6;
+          keywordHits += 1;
+        }
 
         for (final w in words) {
-          if (k.contains(w)) score += 2;
+          if (k.contains(w)) {
+            score += 2;
+            keywordHits += 1;
+          }
         }
       }
 
@@ -143,12 +201,21 @@ class ChatServiceImpl implements ChatService {
             if (title.contains(concept) ||
                 injury.keywords.any((k) => k.toLowerCase().contains(concept))) {
               score += 5;
+              conceptHits += 1;
             } else {
               score += 2;
+              conceptHits += 1;
             }
           }
         }
       });
+
+      for (final part in _bodyParts) {
+        if (q.contains(part)) {
+          score += 0.5;
+          bodyHits += 1;
+        }
+      }
 
       final relatedGuides = guides.where((g) => g.injuryId == injury.id);
 
@@ -163,15 +230,23 @@ class ChatServiceImpl implements ChatService {
       }
 
       if (injury.severity == "severe") {
-        if (q.contains("አይተነፍስም") ||
-            q.contains("ብዙ ደም") ||
-            q.contains("አይቆም") ||
-            q.contains("unconscious")) {
-          score += 5;
+        for (final token in _severeTokens) {
+          if (q.contains(token)) {
+            score += 5;
+            break;
+          }
         }
       }
 
-      score += (_priority[injury.id] ?? 1);
+      if (titleHits + keywordHits + conceptHits == 0) {
+        score = 0;
+      } else if (bodyHits > 0) {
+        score += bodyHits * 0.3;
+      }
+
+      if (score > 0) {
+        score += (_priority[injury.id] ?? 1);
+      }
 
       scores[injury] = score;
     }
@@ -179,7 +254,7 @@ class ChatServiceImpl implements ChatService {
     final sorted = scores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    if (sorted.isEmpty || sorted.first.value <= 0) {
+    if (sorted.isEmpty) {
       return ChatResult(
         injury: null,
         steps: [],
@@ -189,8 +264,7 @@ class ChatServiceImpl implements ChatService {
     }
 
     final best = sorted.first.key;
-
-    final suggestions = sorted.skip(1).take(2).map((e) => e.key).toList();
+    final suggestions = sorted.take(3).map((e) => e.key).toList();
 
     final bestGuide = guides.firstWhere(
       (g) => g.injuryId == best.id,
@@ -200,10 +274,19 @@ class ChatServiceImpl implements ChatService {
     final maxScore = sorted.first.value;
     final double confidence = ((maxScore / 20).clamp(0.0, 1.0)).toDouble();
 
+    if (maxScore <= 0 || confidence < 0.35) {
+      return ChatResult(
+        injury: null,
+        steps: [],
+        suggestions: suggestions,
+        confidence: confidence,
+      );
+    }
+
     return ChatResult(
       injury: best,
       steps: bestGuide.steps,
-      suggestions: suggestions,
+      suggestions: suggestions.where((i) => i.id != best.id).take(2).toList(),
       confidence: confidence,
     );
   }

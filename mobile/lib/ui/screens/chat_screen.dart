@@ -32,6 +32,11 @@ class _ChatScreenState extends State<ChatScreen>
   final ScrollController _scrollController = ScrollController();
   bool _isTyping = false;
   late final AnimationController _typingController;
+  List<String> _suggestions = const [
+    'ቃጠሎ',
+    'ደም መደምሰስ',
+    'መታፈን',
+  ];
 
   @override
   void dispose() {
@@ -152,10 +157,31 @@ class _ChatScreenState extends State<ChatScreen>
     final result = await _chatService.match(text);
 
     if (result.injury == null) {
+      final suggestionTitles = result.suggestions
+          .map((s) => s.title)
+          .where((t) => t.trim().isNotEmpty)
+          .toList();
+
+      if (suggestionTitles.isNotEmpty) {
+        setState(() => _suggestions = suggestionTitles);
+      }
+
+      final buffer = StringBuffer();
+      buffer.writeln(
+        'ይቅርታ — የጻፉትን በትክክል ማስረጃ አልተገኘም። እባክዎ እንዲህ አይነት ዝርዝር ይጨምሩ: የጉዳቱ አይነት, የተጎዳው ክፍል, እና ምን ተከስቷል።',
+      );
+      if (suggestionTitles.isNotEmpty) {
+        buffer.writeln('የሚቀርቡ ቅርብ ጉዳቶች:');
+        for (final s in suggestionTitles) {
+          buffer.writeln('• $s');
+        }
+      } else {
+        buffer.writeln('ከሚታወቁ ምሳሌዎች: ቃጠሎ, ደም መደምሰስ, መታፈን, ስብራት');
+      }
+
       final msg = ChatMessage(
         isUser: false,
-        text:
-            'ይቅርታ — የሚመሳሰሉ ጉዳቶች አልተገኙም። እባክዎ በተለዋዋጭ ቃላት ይሞክሩ ወይም ከሚሰጡ ምርጫዎች አንዱን ይምረጡ።',
+        text: buffer.toString(),
         isImportant: true,
       );
       setState(() => _messages.add(msg));
@@ -176,6 +202,14 @@ class _ChatScreenState extends State<ChatScreen>
       }
     } else {
       buffer.writeln('ለዚህ ጉዳት ዝርዝር እርምጃዎች አልተገኙም።');
+    }
+
+    if (result.suggestions.isNotEmpty) {
+      buffer.writeln('\nተመሳሳይ ጉዳቶች:');
+      for (final s in result.suggestions) {
+        buffer.writeln('• ${s.title}');
+      }
+      setState(() => _suggestions = result.suggestions.map((s) => s.title).toList());
     }
 
     final msg = ChatMessage(
@@ -221,7 +255,7 @@ class _ChatScreenState extends State<ChatScreen>
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
               child: SuggestionChips(
-                labels: const ['ሕፃን መታፈን', 'ከፍተኛ የደም መደምሰስ'],
+                labels: _suggestions,
                 onTap: (s) => _sendMessage(s),
               ),
             ),
