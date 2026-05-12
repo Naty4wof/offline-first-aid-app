@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221532503028",
+    "project_id": "first-aid-app-7ae67",
+    "storage_bucket": "first-aid-app-7ae67.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221532503028:android:140911c1fc76ea3bd257a1",
+        "android_client_info": {
+          "package_name": "com.example.offline_first_aid_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4ZCbh6OqEzcB6RZPpAxBxvWLIQPYRjLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

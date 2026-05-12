@@ -1,0 +1,448 @@
+{
+  "categories": [
+    {
+      "id": "burns",
+      "name": "ቃጠሎ",
+      "description": "በሙቀት፣ እሳት ወይም ኬሚካል የሚከሰት የቆዳ ጉዳት"
+    },
+    {
+      "id": "bleeding",
+      "name": "ደም መፍሰስ",
+      "description": "ከቁስል ወይም ጉዳት የሚከሰት የደም ፍሰት"
+    },
+    {
+      "id": "breathing",
+      "name": "የመተንፈስ ችግር",
+      "description": "የአየር መግባት ወይም መውጣት ችግር"
+    },
+    {
+      "id": "fractures",
+      "name": "ስብራት እና ስፖሬን",
+      "description": "አጥንት መሰበር፣ መንቀሳቀስ እና የጅማት ጉዳቶች"
+    },
+    {
+      "id": "wounds",
+      "name": "ቁስሎች እና መቁሰሎች",
+      "description": "በቆዳ ላይ የሚፈጠሩ ክፍት ጉዳቶች እንደ ቁስል እና መቁሰል"
+    },
+    {
+      "id": "poisoning",
+      "name": "መመረዝ",
+      "description": "አደገኛ ንጥረ ነገሮች በመውሰድ፣ በመተንፈስ ወይም በመንካት የሚከሰት ጉዳት"
+    },
+    {
+      "id": "consciousness",
+      "name": "የንቃት መጥፋት እና መንቀጥቀጥ",
+      "description": "ሰው ሲወድቅ ወይም ሲንቀጠቀጥ የሚከሰት አስቸኳይ ሁኔታ"
+    },
+    {
+      "id": "bites",
+      "name": "ንክሻ እና መንከሳት",
+      "description": "ከእንስሳት ወይም ነፍሳት የሚመጡ ጉዳቶች"
+    }
+  ],
+  "injuries": [
+    {
+      "id": "burn_minor",
+      "categoryId": "burns",
+      "title": "ቀላል ቃጠሎ",
+      "severity": "minor",
+      "keywords": ["ቃጠሎ", "ሞቃት ውሃ", "ቀላል"]
+    },
+    {
+      "id": "burn_severe",
+      "categoryId": "burns",
+      "title": "ከባድ ቃጠሎ",
+      "severity": "severe",
+      "keywords": ["እሳት", "ከባድ ቃጠሎ", "ቆዳ ተቃጠለ"]
+    },
+    {
+      "id": "bleeding_minor",
+      "categoryId": "bleeding",
+      "title": "ቀላል ደም መፍሰስ",
+      "severity": "minor",
+      "keywords": ["ትንሽ ደም", "ቁስል"]
+    },
+    {
+      "id": "bleeding_severe",
+      "categoryId": "bleeding",
+      "title": "ከባድ ደም መፍሰስ",
+      "severity": "severe",
+      "keywords": ["ብዙ ደም", "አይቆም", "አደጋ"]
+    },
+    {
+      "id": "choking_adult",
+      "categoryId": "breathing",
+      "title": "መታፈን (አዋቂ)",
+      "severity": "severe",
+      "keywords": ["መታፈን", "አይተነፍስም"]
+    },
+    {
+      "id": "breathing_difficulty",
+      "categoryId": "breathing",
+      "title": "መተንፈስ ችግር",
+      "severity": "severe",
+      "keywords": ["መተንፈስ አለመቻል", "አየር አጣ"]
+    },
+    {
+      "id": "fracture_basic",
+      "categoryId": "fractures",
+      "title": "አጥንት መሰበር",
+      "severity": "severe",
+      "keywords": ["አጥንት ተሰበረ", "ህመም", "እጅ አይንቀሳቀስ"]
+    },
+    {
+      "id": "sprain",
+      "categoryId": "fractures",
+      "title": "ስፖሬን",
+      "severity": "minor",
+      "keywords": ["ጅማት ተጎዳ", "እግር አመመ", "መታመም"]
+    },
+    {
+      "id": "cut_deep",
+      "categoryId": "wounds",
+      "title": "ጥልቅ ቁስል",
+      "severity": "severe",
+      "keywords": ["ቁስል", "ደም", "ጥልቅ"]
+    },
+    {
+      "id": "cut_minor",
+      "categoryId": "wounds",
+      "title": "ቀላል ቁስል",
+      "severity": "minor",
+      "keywords": ["ትንሽ ቁስል", "ንክሻ"]
+    },
+    {
+      "id": "poison_ingestion",
+      "categoryId": "poisoning",
+      "title": "መመረዝ (በመውሰድ)",
+      "severity": "severe",
+      "keywords": ["መመረዝ", "መድሃኒት", "ኬሚካል"]
+    },
+    {
+      "id": "fainting",
+      "categoryId": "consciousness",
+      "title": "መውደቅ (Fainting)",
+      "severity": "minor",
+      "keywords": ["ወደቀ", "ራስ ዞረ"]
+    },
+    {
+      "id": "seizure",
+      "categoryId": "consciousness",
+      "title": "መንቀጥቀጥ (Seizure)",
+      "severity": "severe",
+      "keywords": ["ንቀጠቀጠ", "አካል አይታዘዝ"]
+    },
+    {
+      "id": "snake_bite",
+      "categoryId": "bites",
+      "title": "የእባብ ንክሻ",
+      "severity": "severe",
+      "keywords": ["እባብ", "ነከሰ"]
+    },
+    {
+      "id": "insect_sting",
+      "categoryId": "bites",
+      "title": "የነፍሳት መንከሳት",
+      "severity": "minor",
+      "keywords": ["ንክሻ", "ትንሽ ህመም"]
+    }
+  ],
+  "guides": [
+    {
+      "id": "guide_burn_minor",
+      "injuryId": "burn_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ቀላል ቃጠሎ",
+      "description": "ቀላል ቃጠሎ በፍጥነት ከተከለከለ በቀላሉ ይፈወሳል።",
+
+      "symptoms": ["ቀይ ወይም ሮዝ ቆዳ", "ህመም", "ትንሽ መብላት", "ቀላል እብጠት"],
+
+      "steps": [
+        "ተቃጠለውን ክፍል በቀዝቃዛ ውሃ 10–20 ደቂቃ አስቀምጥ",
+        "እብጠት ከመጀመሩ በፊት ቀለበቶችን፣ ሰዓቶችን ወይም ጥብቅ ልብሶችን ያስወግዱ",
+        "ቃጠሎውን በንፁህ በማይጣበቅ ልብስ ወይም በንጹህ ጨርቅ ይሸፍኑ",
+        "አስፈላጊ ከሆነ ቦታውን በቀስታ ያጽዱ"
+      ],
+
+      "warnings": ["በረዶ አትጠቀም", "ቅቤ፣ ዘይት፣ የጥርስ ሳሙና ወይም ክሬም አይጠቀሙ"],
+
+      "whenToSeekHelp": ["ቃጠሎው ፊት, እጆች, እግሮች, መገጣጠሚያዎች ወይም ብልት ላይ ተጽዕኖ ካሳደረ","ቃጠሎው ከሰውዬው መዳፍ የሚበልጥ ከሆነ"],
+
+      "explanation": "ቃጠሎውን ማቀዝቀዝ ሙቀቱ ጥልቅ የቆዳ ሽፋኖችን እንዳይጎዳ እና ህመምን እና እብጠትን ይቀንሳል",
+
+
+      "dos": ["በተቻለ ፍጥነት ውሃ ማፍሰስ"],
+      "donts": ["ዘይት አትቀበል","የተጎዳውን ቆዳ አይንኩ ወይም አይላጡ"]
+    },
+    {
+      "id": "guide_burn_severe",
+      "injuryId": "burn_severe",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ከባድ ቃጠሎ",
+
+      "description": "ከባድ ቃጠሎ የሕይወት አደጋ ሊሆን ይችላል።",
+
+      "symptoms": ["ነጭ፣ ጥቁር፣ ቡናማ ወይም የተቃጠለ ቆዳ", "ከፍተኛ ጉዳት", "በነርቭ ጉዳት ምክንያት ከባድ ህመም ወይም ህመም የለም"],
+
+      "steps": ["ሰውየውን ከመርዳትዎ በፊት አካባቢው ደህንነቱ የተጠበቀ መሆኑን ያረጋግጡ", "በቃጠሎው ላይ የተጣበቁ ልብሶችን አያስወግዱ","በንፁህ ጨርቅ ሸፍኑ","አስፈላጊ እና ደህንነቱ የተጠበቀ ከሆነ ቃጠሎውን በቀዝቃዛ ውሃ እስከ 10 ደቂቃዎች ድረስ ያቀዘቅዙ", "ወዲያውኑ ይደውሉ ወይም ወደ ድንገተኛ ህክምና አገልግሎት ይውሰዱት"],
+
+      "warnings": ["ልብስ አትንቀሳቀስ", "በረዶ ወይም ቀዝቃዛ ውሃ አይጠቀሙ","ትላልቅ ቃጠሎዎችን በውሃ ውስጥ አታስጠምቁ ምክንያቱም ይህ ሃይፖሰርሚያ ሊያስከትል ይችላል"],
+
+      "whenToSeekHelp": ["ለሁሉም ከባድ ቃጠሎዎች ወዲያውኑ"],
+
+      "explanation": "ከባድ ቃጠሎ ጥልቅ ጉዳት ያመጣል",
+
+      "dos": ["ወዲያውኑ የአደጋ ጊዜ አገልግሎቶችን ይደውሉ"],
+      "donts": ["የሕክምና እንክብካቤን አይዘገዩ","የተጣበቁ ልብሶችን አይላጡ","ቁስሉን አትንካ"]
+    },
+    {
+      "id": "guide_bleeding_minor",
+      "injuryId": "bleeding_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ቀላል ደም መፍሰስ",
+      "description": "ቀላል ደም መፍሰስ በቀላሉ ሊቆም ይችላል።",
+
+      "symptoms": ["አነስተኛ መጠን ያለው የደም መፍሰስ", "ላዩን መቆረጥ ወይም መቧጨር"," ቀላል ህመም"],
+
+      "steps": ["ቁስሉን ከመንካትዎ በፊት ከተቻለ እጅዎን ይታጠቡ", "ቁስሉን በንጹህ ውሃ በቀስታ ያጠቡ", "የደም መፍሰስ እስኪቆም ድረስ ንጹህ ጋዝ ወይም ጨርቅ በመጠቀም ረጋ ያለ ቀጥተኛ ግፊት ያድርጉ","በዙሪያው ያለውን ቆዳ በጥንቃቄ ያድርቁ"],
+
+      "warnings": ["ንፁህ ያልሆነ ነገር አትጠቀም"],
+      "whenToSeekHelp": ["ከረጅም ጊዜ በኋላ ካልቆመ"],
+      "explanation": "ቀጥተኛ ግፊት የደም ፍሰቱን ያቆማል",
+      "dos": ["ንፁህ ጨርቅ ተጠቀም"],
+      "donts": ["ቁስሉን በቆሸሸ እጅ አትንካ"]
+    },
+    {
+      "id": "guide_bleeding_severe",
+      "injuryId": "bleeding_severe",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ከባድ ደም መፍሰስ",
+      "description": "ከባድ ደም መፍሰስ አደገኛ ነው።",
+      "symptoms": ["ብዙ ደም", "ድካም"],
+      "steps": ["ቁስሉን በኃይል ጫን", "የተጎዳውን ክፍል ከልብ በላይ ከፍ አድርግ", "እርዳታ ጥራ"],
+      "warnings": ["ደም ካልቆመ አትዘግይ"],
+      "whenToSeekHelp": ["ወዲያውኑ"],
+      "explanation": "ፈጣን ግፊት ህይወት ያድናል",
+      "dos": ["ጠንካራ ግፊት አድርግ"],
+      "donts": ["አትዘግይ"]
+    },
+    {
+      "id": "guide_choking",
+      "injuryId": "choking_adult",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "መታፈን",
+      "description": "መታፈን ፈጣን እርዳታ ይፈልጋል።",
+      "symptoms": ["መተንፈስ አለመቻል", "እጅ ወደ አንገት", "ድምፅ አለመውጣት"],
+      "steps": ["5 ጊዜ ከጀርባ መምታት", "የሆድ መጭመቅ (Heimlich) አድርግ", "እርዳታ ጥራ"],
+      "warnings": ["ተጎጂው እያሳለፈ ከሆነ ኃይል አትጠቀም"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "ሰው ሰራሽ ግፊት የታፈነውን ነገር ያወጣል",
+      "dos": ["ፈጣን እርምጃ"],
+      "donts": ["አትዘግይ"]
+    },
+    {
+      "id": "guide_breathing",
+      "injuryId": "breathing_difficulty",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "መተንፈስ ችግር",
+      "description": "መተንፈስ ችግር አስቸኳይ ሁኔታ ነው።",
+      "symptoms": ["አየር ማጣት", "ፈጣን መተንፈስ", "ከንፈር ሰማያዊ መሆን"],
+      "steps": [
+        "ሰውየውን ምቹ በሆነ ሁኔታ አስቀምጥ",
+        "አየር እንዲገባ አድርግ",
+        "ጠባብ ልብስ ፍታ",
+        "እርዳታ ጥራ"
+      ],
+      "warnings": ["ተጎጂውን ብቻውን አትተው"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "ኦክሲጅን ማጣት ለአካል ክፍሎች አደገኛ ሊሆን ይችላል",
+      "dos": ["አረፍ አድርግ"],
+      "donts": ["አትዘግይ"]
+    },
+    {
+      "id": "guide_fracture",
+      "injuryId": "fracture_basic",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "አጥንት መሰበር",
+      "description": "አጥንት መሰበር ከባድ ጉዳት ሲሆን ፈጣን እና ትክክለኛ እርዳታ ያስፈልጋል።",
+      "symptoms": ["ከፍተኛ ህመም", "እብጠት", "መንቀሳቀስ አለመቻል", "ቅርጽ መቀየር"],
+      "steps": [
+        "ተጎጂውን ክፍል አታንቀሳቅስ",
+        "በእንጨት ወይም በጠንካራ ነገር ደግፍ (Splint)",
+        "ከፍ አድርገህ አኑር እና በረዶ አድርግ",
+        "ወዲያውኑ ወደ ሆስፒታል ውሰድ"
+      ],
+      "warnings": ["አጥንቱን ለመመለስ አትሞክር", "ክፍሉን አታንቀሳቅስ"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "እንቅስቃሴን መከላከል ተጨማሪ የነርቭ እና የደም ስር ጉዳትን ይከላከላል",
+      "dos": ["ክፍሉን ደግፍ", "ተጎጂውን አረፍ አድርግ"],
+      "donts": ["አጥንቱን አታንቀሳቅስ", "አትጫን"]
+    },
+    {
+      "id": "guide_sprain_minor",
+      "injuryId": "sprain",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ቀላል መጨናነቅ (Sprain)",
+      "description": "መጨናነቅ የጅማት መጎዳት ሲሆን በብዛት በእግር ወይም በእጅ ይከሰታል።",
+      "symptoms": ["ህመም", "እብጠት", "መንቀሳቀስ መቸገር"],
+      "steps": [
+        "እጅ/እግርን አሳርፍ (Rest)",
+        "በቀዝቃዛ ነገር 15–20 ደቂቃ አቀዝቅዝ",
+        "በፋሻ ጠቅልል",
+        "ከፍ አድርግ"
+      ],
+      "warnings": ["በቀጥታ በረዶ ቆዳ ላይ አትጫን", "ከፍተኛ ህመም ካለ አትጫን"],
+      "whenToSeekHelp": ["መንቀሳቀስ ካልቻለ", "ከፍተኛ እብጠት ካለ"],
+      "explanation": "የ RICE ዘዴ እብጠትን እና ህመምን ይቀንሳል",
+      "dos": ["ቀዝቃዛ ነገር ተጠቀም", "አካሉን አሳርፍ"],
+      "donts": ["ሞቃት ነገር አትጠቀም", "መጀመሪያ ላይ አታሸት"]
+    },
+    {
+      "id": "guide_cut_minor",
+      "injuryId": "cut_minor",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ቀላል ቁስል",
+      "description": "ቀላል ቁስል በቆዳ ላይ የሚፈጠር ነው እና በቀላሉ ሊድን ይችላል።",
+      "symptoms": ["ትንሽ ደም መፍሰስ", "ትንሽ ህመም"],
+      "steps": [
+        "እጆችን ንጹህ አድርግ",
+        "ቁስሉን በንጹህ ውሃ እጠብ",
+        "ቀስ ብለህ ጫን ደም ለማቆም",
+        "በንጹህ ጨርቅ ወይም ፋሻ ሸፍን"
+      ],
+
+      "warnings": ["ቆሻሻ ነገር አትጠቀም", "ከተበከለ አትተው"],
+
+      "whenToSeekHelp": ["ደም ካልቆመ", "ቁስሉ ጥልቅ ከሆነ", "እብጠት ካለ"],
+
+      "explanation": "ንጹህ ማድረግ እና መሸፈን ኢንፌክሽንን ይከላከላል",
+      "dos": ["ንጹህ ውሃ ተጠቀም", "ቁስሉን ሸፍን"],
+      "donts": ["ቁስሉን አትንካ", "ቆሻሻ ነገር አትጠቀም"]
+    },
+    {
+      "id": "guide_deep_cut",
+      "injuryId": "cut_deep",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "ጥልቅ ቁስል",
+      "description": "ጥልቅ ቁስል ብዙ ደም ሊፈስ ይችላል እና ፈጣን እርዳታ ያስፈልጋል።",
+      "symptoms": ["ብዙ ደም", "ጥልቅ ቁስል", "ህመም"],
+      "steps": ["ቁስሉን በንፁህ ጨርቅ ጫን", "ግፊት ቀጥል", "ከፍ አድርገህ አኑር", "እርዳታ ጥራ"],
+      "warnings": ["የተጫንክበትን ጨርቅ በቀላሉ አትንሳ", "ንጹሕ ያልሆነ ነገር አትጠቀም"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "የደም መርጋት እንዲፈጠር ግፊት የግድ ነው",
+      "dos": ["ግፊት አድርግ", "ንፁህ ጨርቅ ተጠቀም"],
+      "donts": ["ቁስሉን አትንካ", "አትዘግይ"]
+    },
+    {
+      "id": "guide_poison",
+      "injuryId": "poison_ingestion",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "መመረዝ",
+      "description": "መመረዝ አደገኛ ነው እና ፈጣን እርዳታ ያስፈልጋል።",
+      "symptoms": ["ማስታወክ", "ራስ ምታት", "ራስ ማዞር", "ንቃት መጥፋት"],
+      "steps": [
+        "ሰውየውን ከንጥረ ነገሩ አርቅ",
+        "እንዲያስታውክ አታድርግ",
+        "የተወሰደውን ነገር ለይተህ እወቅ",
+        "እርዳታ ጥራ"
+      ],
+      "warnings": ["ሰውየውን በግድ አታስታውክ", "ያልታዘዘ ነገር አታጠጣ"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "አንዳንድ ንጥረ ነገሮች ሲመለሱ ጉሮሮን የበለጠ ሊጎዱ ይችላሉ",
+      "dos": ["እርዳታ ጥራ", "መረጃ ሰብስብ"],
+      "donts": ["በራስህ ሕክምና አትጀምር"]
+    },
+    {
+      "id": "guide_fainting",
+      "injuryId": "fainting",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "መውደቅ (Fainting)",
+      "description": "መውደቅ ጊዜያዊ የንቃት መጥፋት ሲሆን ብዙ ጊዜ በደም ግፊት መቀነስ ይከሰታል።",
+      "symptoms": ["ድካም", "ራስ ማዞር", "መውደቅ"],
+      "steps": [
+        "ሰውየውን በጀርባው አስተኝ",
+        "እግሮቹን ከፍ አድርግ",
+        "ንፁህ አየር እንዲያገኝ አድርግ",
+        "ንቃት እስኪመለስ ድረስ ጠብቅ"
+      ],
+      "warnings": ["ሰውየውን በፍጥነት አታንቀሳቅስ", "ሳይነቃ ምግብ ወይም መጠጥ አትስጥ"],
+      "whenToSeekHelp": ["ከ1 ደቂቃ በላይ ካልነቃ", "በድጋሚ ከተደገመ"],
+      "explanation": "እግሮችን ከፍ ማድረግ ወደ አእምሮ የሚሄደውን የደም ፍሰት ይጨምራል",
+      "dos": ["እግሮቹን ከፍ አድርግ", "ንፁህ አየር ስጥ"],
+      "donts": ["ሳይነቃ ምግብ አትስጥ"]
+    },
+    {
+      "id": "guide_seizure",
+      "injuryId": "seizure",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "መንቀጥቀጥ",
+      "description": "መንቀጥቀጥ አስቸኳይ ሁኔታ ሲሆን ተጎጂውን ከጉዳት መጠበቅ አስፈላጊ ነው።",
+      "symptoms": ["አካል መንቀጥቀጥ", "መውደቅ", "ንቃት መጥፋት"],
+      "steps": [
+        "አደጋ ያለበትን ነገር ከአካባቢው አርቅ",
+        "ሰውየውን በጎን አጋድል",
+        "ጊዜውን ቁጠር",
+        "ከቆመ በኋላ እርዳታ ስጥ"
+      ],
+      "warnings": ["አፉ ውስጥ ምንም ነገር አታስገባ", "መንቀጥቀጡን በኃይል አታቁም"],
+      "whenToSeekHelp": ["ከ5 ደቂቃ በላይ ከቆየ", "ለመጀመሪያ ጊዜ ከሆነ"],
+      "explanation": "መንቀጥቀጥ ጊዜ የሚፈልግ የአእምሮ ኤሌክትሪክ መዛባት ነው",
+      "dos": ["አካባቢን ደህንነት አስጠብቅ", "ጊዜ ቁጠር"],
+      "donts": ["አትያዝ", "አትግፋ"]
+    },
+    {
+      "id": "guide_snake_bite",
+      "injuryId": "snake_bite",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "የእባብ ንክሻ",
+      "description": "የእባብ ንክሻ አደገኛ ነው እና ፈጣን እርዳታ ያስፈልጋል።",
+      "symptoms": ["ህመም", "እብጠት", "የንክሻ ምልክት", "ራስ ማዞር"],
+      "steps": [
+        "ሰውየውን አረጋጋ እና አሳርፍ",
+        "የተነከሰው ክፍል እንዳይንቀሳቀስ አድርግ",
+        "በቀላሉ በጨርቅ ጠቅልል",
+        "እርዳታ ጥራ"
+      ],
+      "warnings": ["ቁስሉን መቁረጥ አትሞክር", "መርዙን በመምጠጥ ለማውጣት አትሞክር"],
+      "whenToSeekHelp": ["ሁልጊዜ"],
+      "explanation": "እንቅስቃሴ መቀነስ መርዙ ወደ ሰውነት እንዳይሰራጭ ይረዳል",
+      "dos": ["አረፍ አድርግ", "ፈጣን እርዳታ ፈልግ"],
+      "donts": ["አትሮጥ", "አትቁረጥ"]
+    },
+    {
+      "id": "guide_insect_sting",
+      "injuryId": "insect_sting",
+      "imagePath": "assets/logo.png",
+      "audioPath": "assets/audio/sample.mp3",
+      "title": "የነፍሳት ንክሻ",
+      "description": "የነፍሳት ንክሻ ብዙ ጊዜ ቀላል ሲሆን አንዳንድ ጊዜ አለርጂ ሊያስከትል ይችላል።",
+      "symptoms": ["ህመም", "እብጠት", "ማሳከክ"],
+      "steps": [
+        "ንክሻውን ንጹህ አድርግ",
+        "መንደፊያ (stinger) ካለ በጥፍር ወይም በካርድ ፍቀህ አስወግድ",
+        "በረዶ አድርግ",
+        "ክፍሉን አሳርፍ"
+      ],
+      "warnings": ["አትቧጭር"],
+      "whenToSeekHelp": ["መተንፈስ ካልቻለ", "ፊት ወይም አንገት ካበጠ", "አለርጂ ምልክት ካለ"],
+      "explanation": "ቀዝቃዛ ነገር እብጠትን እና ህመምን ይቀንሳል",
+      "dos": ["በረዶ ተጠቀም", "ንጹህ አድርግ"],
+      "donts": ["አትቧጭር", "አትጫን"]
+    }
+  ]
+}
