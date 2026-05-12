@@ -32,11 +32,7 @@ class _ChatScreenState extends State<ChatScreen>
   final ScrollController _scrollController = ScrollController();
   bool _isTyping = false;
   late final AnimationController _typingController;
-  List<String> _suggestions = const [
-    'ቃጠሎ',
-    'ደም መደምሰስ',
-    'መታፈን',
-  ];
+  List<String> _suggestions = const ['ቃጠሎ', 'ደም መደምሰስ', 'መታፈን'];
 
   @override
   void dispose() {
@@ -209,7 +205,9 @@ class _ChatScreenState extends State<ChatScreen>
       for (final s in result.suggestions) {
         buffer.writeln('• ${s.title}');
       }
-      setState(() => _suggestions = result.suggestions.map((s) => s.title).toList());
+      setState(
+        () => _suggestions = result.suggestions.map((s) => s.title).toList(),
+      );
     }
 
     final msg = ChatMessage(

@@ -78,7 +78,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <div className="mx-auto flex w-full max-w-[1400px] gap-5 px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-350 gap-5 px-4 py-5 sm:px-6 lg:px-8">
         <aside className="hidden w-64 flex-col gap-4 lg:flex">
           <div className="rounded-2xl border bg-card p-4 shadow-sm">
             <div className="flex items-center gap-3">
