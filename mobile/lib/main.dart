@@ -7,8 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:offline_first_aid_app/core/services/storage_service.dart';
 import 'package:offline_first_aid_app/core/services/sync_service.dart';
 import 'package:offline_first_aid_app/core/services/sync_listener.dart';
+import 'firebase_options.dart';
 
 // Data Layer
+// import 'package:offline_first_aid_app/features/guides/domain/services/guide_sync_service.dart';
 import 'package:offline_first_aid_app/features/guides/data/datasources/guide_local_datasource.dart';
 import 'package:offline_first_aid_app/features/guides/data/repositories/guide_repository_impl.dart';
 import 'package:offline_first_aid_app/features/hospitals/data/repositories/hospital_repository_impl.dart';
@@ -28,7 +30,9 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     // 🔥 Firebase
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     // UI config
     SystemChrome.setSystemUIOverlayStyle(
@@ -44,6 +48,14 @@ void main() async {
     // Local storage
     await Hive.initFlutter();
     await StorageService.instance.init();
+
+    // final guideSync = GuideSyncService();
+
+    // try {
+    //   await guideSync.syncAll();
+    // } catch (e) {
+    //   debugPrint("Offline mode: using cached guides");
+    // }
 
     // 🌐 START SYNC SYSTEM (IMPORTANT)
     final syncListener = SyncListener();
