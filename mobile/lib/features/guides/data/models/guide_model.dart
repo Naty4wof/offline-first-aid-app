@@ -33,19 +33,29 @@ class GuideModel {
 
   factory GuideModel.fromJson(Map<String, dynamic> json) {
     return GuideModel(
-      id: json['id'],
-      injuryId: json['injuryId'],
-      title: json['title'],
-      description: json['description'] ?? '',
+      id: json['id']?.toString() ?? '',
+      injuryId: json['injuryId']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+
+      description: json['description']?.toString() ?? '',
+
       symptoms: List<String>.from(json['symptoms'] ?? []),
+
       steps: List<String>.from(json['steps'] ?? []),
+
       warnings: List<String>.from(json['warnings'] ?? []),
+
       whenToSeekHelp: List<String>.from(json['whenToSeekHelp'] ?? []),
-      explanation: json['explanation'] ?? '',
+
+      explanation: json['explanation']?.toString() ?? '',
+
       dos: List<String>.from(json['dos'] ?? []),
+
       donts: List<String>.from(json['donts'] ?? []),
-      imagePath: json['imagePath'],
-      audioPath: json['audioPath'],
+
+      imagePath: json['imagePath']?.toString(),
+
+      audioPath: json['audioPath']?.toString(),
     );
   }
 }

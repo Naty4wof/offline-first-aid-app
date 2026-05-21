@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_first_aid_app/core/services/storage_service.dart';
-import '../../data/models/category_model.dart';
-import '../../data/models/guide_model.dart';
+// import '../../data/models/category_model.dart';
+// import '../../data/models/guide_model.dart';
 import '../../data/models/injury_model.dart';
 import '../../domain/repositories/guide_repository.dart';
 import 'guide_event.dart';

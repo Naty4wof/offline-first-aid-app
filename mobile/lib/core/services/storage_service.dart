@@ -9,6 +9,9 @@ class StorageService {
     await Hive.openBox('chat_history');
     await Hive.openBox('user');
     await Hive.openBox('favorites');
+    await Hive.openBox('categories');
+    await Hive.openBox('injuries');
+    await Hive.openBox('guides');
   }
 
   // Chat history (store as simple Map entries)
@@ -81,6 +84,8 @@ class StorageService {
   List<String> getFavorites() {
     final box = Hive.box('favorites');
     return box.keys.cast<String>().toList();
+  }
+
   bool hasSeenWelcome() {
     final box = Hive.box('user');
     return box.get('has_seen_welcome') == true;

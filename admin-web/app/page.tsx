@@ -1,297 +1,269 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getUsers } from "@/lib/users";
-import {
-  BadgeCheck,
-  Bell,
-  Building2,
-  ClipboardCheck,
-  LayoutGrid,
-  Search,
-  Settings,
-  Users,
-} from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCategories, type Category } from "@/lib/firestore/categories";
+import { getGuides } from "@/lib/firestore/guides";
+import { getInjuries, type Injury } from "@/lib/firestore/injuries";
+import { getUsers } from "@/lib/users";
+
+type GuideEntry = { injuryId?: string };
+
+const maxInjuriesPerCategory = 2;
+
+function DonutChart({ percent, label }: { percent: number; label: string }) {
+  const clamped = Math.max(0, Math.min(100, percent));
+  return (
+    <div className="flex items-center gap-4">
+      <div
+        className="h-24 w-24 rounded-full"
+        style={{
+          background: `conic-gradient(#0f172a ${clamped}%, #e2e8f0 0%)`,
+        }}
+        aria-label={label}
+        role="img"
+      />
+      <div>
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+          {label}
+        </p>
+        <p className="mt-2 text-3xl font-semibold text-slate-900">{clamped}%</p>
+        <p className="mt-1 text-sm text-slate-500">
+          Portion of injuries covered by guides
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<Array<{ id: string }>>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [injuries, setInjuries] = useState<Injury[]>([]);
+  const [guides, setGuides] = useState<GuideEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const summary = useMemo(() => {
-    const total = users.length;
-    const pending = users.filter((user) => !user.isSynced).length;
-    return {
-      total,
-      pending,
-      synced: Math.max(total - pending, 0),
-    };
-  }, [users]);
 
   useEffect(() => {
     let isMounted = true;
 
-    const load = async () => {
+    const loadDashboard = async () => {
       try {
-        const data = await getUsers();
-        if (isMounted) setUsers(data);
+        const [userData, categoryData, injuryData, guideData] =
+          await Promise.all([
+            getUsers(),
+            getCategories(),
+            getInjuries(),
+            getGuides(),
+          ]);
+        if (isMounted) {
+          setUsers(userData as Array<{ id: string }>);
+          setCategories(categoryData);
+          setInjuries(injuryData);
+          setGuides(guideData as GuideEntry[]);
+        }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : "Failed to load users");
+          setError(
+            err instanceof Error ? err.message : "Failed to load dashboard",
+          );
         }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
-    load();
+    loadDashboard();
 
     return () => {
       isMounted = false;
     };
   }, []);
 
+  const injuryCountByCategory = useMemo(() => {
+    return injuries.reduce<Record<string, number>>((acc, injury) => {
+      acc[injury.categoryId] = (acc[injury.categoryId] || 0) + 1;
+      return acc;
+    }, {});
+  }, [injuries]);
+
+  const guideCountByInjury = useMemo(() => {
+    return guides.reduce<Record<string, number>>((acc, guide) => {
+      const key = guide.injuryId || "";
+      if (!key) return acc;
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+  }, [guides]);
+
+  const guideCountByCategory = useMemo(() => {
+    return injuries.reduce<Record<string, number>>((acc, injury) => {
+      const guideCount = guideCountByInjury[injury.id] || 0;
+      acc[injury.categoryId] = (acc[injury.categoryId] || 0) + guideCount;
+      return acc;
+    }, {});
+  }, [injuries, guideCountByInjury]);
+
+  const injuriesWithGuides = useMemo(() => {
+    const withGuide = new Set<string>();
+    guides.forEach((guide) => {
+      if (guide.injuryId) withGuide.add(guide.injuryId);
+    });
+    return withGuide;
+  }, [guides]);
+
+  const categoryInsights = useMemo(() => {
+    const ranked = categories
+      .map((category) => {
+        const injuriesCount = injuryCountByCategory[category.id] || 0;
+        const guideCount = guideCountByCategory[category.id] || 0;
+        return {
+          id: category.id,
+          name: category.name,
+          injuriesCount,
+          guideCount,
+        };
+      })
+      .sort((a, b) => b.injuriesCount - a.injuriesCount);
+
+    return ranked.slice(0, 5);
+  }, [categories, injuryCountByCategory, guideCountByCategory]);
+
+  const summaryStats = useMemo(
+    () => [
+      { label: "Total users", value: users.length.toLocaleString() },
+      { label: "Total categories", value: categories.length.toString() },
+      { label: "Total injuries", value: injuries.length.toString() },
+      { label: "Total guides", value: guides.length.toString() },
+    ],
+    [users.length, categories.length, injuries.length, guides.length],
+  );
+
+  const injuriesWithGuidesCount = injuries.filter((injury) =>
+    injuriesWithGuides.has(injury.id),
+  ).length;
+  const injuriesWithoutGuidesCount = injuries.length - injuriesWithGuidesCount;
+  const guideCoveragePercent =
+    injuries.length === 0
+      ? 0
+      : Math.round((injuriesWithGuidesCount / injuries.length) * 100);
+
   return (
-    <div className="min-h-screen bg-muted/30">
-      <div className="mx-auto flex w-full max-w-350 gap-5 px-4 py-5 sm:px-6 lg:px-8">
-        <aside className="hidden w-64 flex-col gap-4 lg:flex">
-          <div className="rounded-2xl border bg-card p-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                <LayoutGrid className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold">AidFleet Admin</p>
-                <p className="text-xs text-muted-foreground">Control center</p>
-              </div>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 rounded-2xl border bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            Dashboard
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold text-slate-900">
+            Operational snapshot
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">
+            Live metrics for content coverage and admin activity.
+          </p>
+        </div>
+      </div>
 
-          <nav className="space-y-1 text-sm">
-            {[
-              { label: "Overview", icon: LayoutGrid },
-              { label: "Users", icon: Users },
-              { label: "Hospitals", icon: Building2 },
-              { label: "Approvals", icon: ClipboardCheck },
-              { label: "Settings", icon: Settings },
-            ].map((item) => (
-              <button
-                key={item.label}
-                className={
-                  item.label === "Overview"
-                    ? "flex w-full items-center gap-3 rounded-xl bg-primary/10 px-3 py-2 text-left font-semibold text-primary"
-                    : "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-muted-foreground hover:bg-muted/70"
-                }
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-sm">Admin actions</CardTitle>
-              <CardDescription>Quick links</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Review 6 hospital requests</p>
-              <p>Approve 12 user profiles</p>
-              <p>Check sync queue</p>
-            </CardContent>
-          </Card>
-        </aside>
-
-        <main className="flex-1 space-y-5">
-          <Card className="shadow-sm">
-            <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  Admin dashboard
-                </p>
-                <h1 className="mt-2 text-2xl font-semibold">Welcome back</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Manage users, hospitals, and approvals in one place.
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="hidden items-center gap-2 rounded-full border bg-background px-3 py-2 text-sm text-muted-foreground md:flex">
-                  <Search className="h-4 w-4" />
-                  Search
-                </div>
-                <Button variant="outline" size="icon">
-                  <Bell className="h-4 w-4" />
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-auto p-0">
-                      <Avatar className="h-9 w-9">
-                        <AvatarFallback>MG</AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </CardContent>
-          </Card>
-
-          <section className="grid gap-4 md:grid-cols-3">
-            <Card className="shadow-sm">
+      {loading && (
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Card
+              key={`stat-skeleton-${index}`}
+              className="rounded-2xl shadow-sm"
+            >
               <CardHeader>
-                <CardDescription>Total users</CardDescription>
-                <CardTitle className="text-3xl">
-                  {summary.total.toLocaleString()}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                {summary.synced.toLocaleString()} synced
-              </CardContent>
-            </Card>
-            <Card className="shadow-sm">
-              <CardHeader>
-                <CardDescription>Pending profiles</CardDescription>
-                <CardTitle className="text-3xl">
-                  {summary.pending.toLocaleString()}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                Needs verification
-              </CardContent>
-            </Card>
-            <Card className="shadow-sm">
-              <CardHeader>
-                <CardDescription>Hospitals onboarded</CardDescription>
-                <CardTitle className="text-3xl">42</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                3 awaiting review
-              </CardContent>
-            </Card>
-          </section>
-
-          <section className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-            <Card className="shadow-sm">
-              <CardHeader>
-                <CardTitle>Recent users</CardTitle>
-                <CardDescription>Newest onboarding activity</CardDescription>
+                <div className="h-3 w-24 animate-pulse rounded-full bg-slate-100" />
               </CardHeader>
               <CardContent>
-                {loading && (
-                  <p className="text-sm text-muted-foreground">Loading...</p>
-                )}
-                {error && <p className="text-sm text-destructive">{error}</p>}
+                <div className="h-8 w-20 animate-pulse rounded-full bg-slate-100" />
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      )}
 
-                {!loading && !error && (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Blood</TableHead>
-                        <TableHead>Age</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {users.slice(0, 6).map((user: any) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">
-                            {user.name || "Unnamed"}
-                          </TableCell>
-                          <TableCell>{user.bloodType || "-"}</TableCell>
-                          <TableCell>{user.age || "-"}</TableCell>
-                          <TableCell>
-                            {user.isSynced ? (
-                              <Badge variant="secondary" className="gap-1">
-                                <BadgeCheck className="h-3 w-3" /> Synced
-                              </Badge>
-                            ) : (
-                              <Badge variant="outline">Pending</Badge>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
+      {!loading && !error && (
+        <>
+          <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {summaryStats.map((stat) => (
+              <Card key={stat.label} className="rounded-2xl shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                    {stat.label}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-4xl font-semibold text-slate-900">
+                  {stat.value}
+                </CardContent>
+              </Card>
+            ))}
+          </section>
+
+          <section className="grid gap-4 lg:grid-cols-3">
+            <Card className="rounded-2xl shadow-sm lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-base">Category insights</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {categoryInsights.length === 0 && (
+                  <p className="text-sm text-slate-500">
+                    Add categories to see coverage details.
+                  </p>
                 )}
+                {categoryInsights.map((row) => (
+                  <div
+                    key={row.id}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {row.name}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Max injuries allowed: {maxInjuriesPerCategory}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                      <span className="text-sm font-semibold text-slate-900">
+                        {row.injuriesCount} injuries
+                      </span>
+                      <span>{row.guideCount} guides</span>
+                    </div>
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
-            <div className="space-y-4">
-              <Card className="shadow-sm">
-                <CardHeader>
-                  <CardTitle>Hospital verification</CardTitle>
-                  <CardDescription>Monthly target</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>Reviewed</span>
-                      <span className="font-semibold">68%</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-muted">
-                      <div className="h-2 w-[68%] rounded-full bg-primary"></div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      41 of 60 hospitals reviewed
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-sm">
-                <CardHeader>
-                  <CardTitle>Quick stats</CardTitle>
-                  <CardDescription>Today</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm">
+            <Card className="rounded-2xl shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-base">Guide coverage</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <DonutChart percent={guideCoveragePercent} label="Coverage" />
+                <div className="grid gap-3 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">New users</span>
-                    <span className="font-semibold">12</span>
+                    <span className="text-slate-500">Injuries with guides</span>
+                    <span className="font-semibold text-slate-900">
+                      {injuriesWithGuidesCount}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Approvals</span>
-                    <span className="font-semibold">9</span>
+                    <span className="text-slate-500">
+                      Injuries without guides
+                    </span>
+                    <span className="font-semibold text-slate-900">
+                      {injuriesWithoutGuidesCount}
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Flags</span>
-                    <span className="font-semibold">2</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </section>
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }

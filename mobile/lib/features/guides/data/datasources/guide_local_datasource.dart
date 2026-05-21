@@ -1,34 +1,50 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+
 import '../models/category_model.dart';
 import '../models/injury_model.dart';
 import '../models/guide_model.dart';
 
 class GuideLocalDataSource {
-  Future<Map<String, dynamic>> loadJson() async {
-    final jsonString =
-        await rootBundle.loadString('assets/data/guides_am.json');
-    return json.decode(jsonString);
-  }
+
+  // ================= CATEGORIES =================
 
   Future<List<CategoryModel>> getCategories() async {
-    final data = await loadJson();
-    return (data['categories'] as List)
-        .map((e) => CategoryModel.fromJson(e))
+    final box = Hive.box('categories');
+
+    return box.values
+        .map(
+          (e) => CategoryModel.fromJson(
+            Map<String, dynamic>.from(e),
+          ),
+        )
         .toList();
   }
+
+  // ================= INJURIES =================
 
   Future<List<InjuryModel>> getInjuries() async {
-    final data = await loadJson();
-    return (data['injuries'] as List)
-        .map((e) => InjuryModel.fromJson(e))
+    final box = Hive.box('injuries');
+
+    return box.values
+        .map(
+          (e) => InjuryModel.fromJson(
+            Map<String, dynamic>.from(e),
+          ),
+        )
         .toList();
   }
 
+  // ================= GUIDES =================
+
   Future<List<GuideModel>> getGuides() async {
-    final data = await loadJson();
-    return (data['guides'] as List)
-        .map((e) => GuideModel.fromJson(e))
+    final box = Hive.box('guides');
+
+    return box.values
+        .map(
+          (e) => GuideModel.fromJson(
+            Map<String, dynamic>.from(e),
+          ),
+        )
         .toList();
   }
 }
