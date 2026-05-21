@@ -1,0 +1,1 @@
+ D:\\projects\\offline-first-aid-app\\mobile\\build\\b1c00a1527c125dd3b5f331f5e08503d\\dart_build_result.json:  C:\\flutter\\bin\\cache\\dart-sdk\\version D:\\projects\\offline-first-aid-app\\mobile\\.dart_tool\\package_config.json D:\\projects\\offline-first-aid-app\\mobile\\pubspec.yaml d:\\projects\\offline-first-aid-app\\mobile\\.dart_tool\\package_config.json
