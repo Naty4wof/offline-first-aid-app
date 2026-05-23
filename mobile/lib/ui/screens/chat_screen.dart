@@ -7,6 +7,7 @@ import '../component/chat/chat_message.dart';
 import '../component/chat/message_bubble.dart';
 import '../component/chat/suggestion_chips.dart';
 import '../component/chat/input_bar.dart';
+import 'voice_live_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? initialMessage;
@@ -306,6 +307,13 @@ class _ChatScreenState extends State<ChatScreen>
               onMicTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('የድምፅ ግቤት በቅርቡ ይመጣል')),
+                );
+              },
+              onLiveVoiceTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const VoiceLiveScreen(),
+                  ),
                 );
               },
             ),

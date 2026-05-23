@@ -4,7 +4,9 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
+  flutter_sound
   objectbox_flutter_libs
+  record_linux
   url_launcher_linux
 )
 

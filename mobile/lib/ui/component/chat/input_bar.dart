@@ -7,12 +7,14 @@ class InputBar extends StatefulWidget {
     required this.controller,
     required this.onSend,
     required this.onMicTap,
+    required this.onLiveVoiceTap,
     super.key,
   });
 
   final TextEditingController controller;
   final void Function(String) onSend;
   final VoidCallback onMicTap;
+  final VoidCallback onLiveVoiceTap;
 
   @override
   State<InputBar> createState() => _InputBarState();
@@ -99,6 +101,13 @@ class _InputBarState extends State<InputBar> {
               widget.onMicTap();
               _listen();
             },
+          ),
+          const SizedBox(width: 8),
+          CircleActionButton(
+            icon: Icons.graphic_eq,
+            background: const Color(0xFFE3F2FD),
+            iconColor: Colors.blue,
+            onTap: widget.onLiveVoiceTap,
           ),
           const SizedBox(width: 8),
           CircleActionButton(
