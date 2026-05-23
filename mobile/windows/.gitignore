@@ -15,3 +15,60 @@ x86/
 *.[Cc]ache
 # but keep track of directories ending in .cache
 !*.[Cc]ache/
+
+# -------------------------------------------------------------------------
+# Flutter / Dart Core Caches and Tooling
+# -------------------------------------------------------------------------
+# Contains compiled build artifacts (safely deletable)
+build/
+
+# Hidden directory containing local package configurations and tools
+.dart_tool/
+
+# Package management files (used to track downloaded dependencies)
+.packages
+.pub-cache/
+.pub/
+
+# Avoid tracking the actual plugin files injected into web/
+web/flutter_bootstrap.js
+
+# -------------------------------------------------------------------------
+# Platform-Specific Local & Generated Files
+# -------------------------------------------------------------------------
+# Android local configuration (contains local SDK paths unique to your machine)
+android/local.properties
+android/key.properties
+android/app/src/main/res/values/strings.xml
+
+# iOS/macOS local configurations and user-specific states
+ios/.xcode.env.local
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+macos/Flutter/Generated.xcconfig
+macos/Flutter/flutter_export_environment.sh
+***.mode1v3
+***.mode2v3
+***.storyboardc
+***.pbxuser
+***.perspectivev3
+xcuserdata/
+
+# Linux/Windows build directories
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+
+# -------------------------------------------------------------------------
+# IDEs and Text Editors
+# -------------------------------------------------------------------------
+# JetBrains / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+
+# Mac system files
+.DS_Store

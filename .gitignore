@@ -75,3 +75,36 @@ scripts/serviceAccountKey.json
 
 # deployment (if using Vercel)
 .vercel/
+
+
+# -------------------------------------------------------------------------
+# Flutter / Dart Core Caches (Scoped to the mobile/ directory)
+# -------------------------------------------------------------------------
+mobile/build/
+mobile/.dart_tool/
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/web/flutter_bootstrap.js
+
+# -------------------------------------------------------------------------
+# Platform-Specific Local & Generated Files
+# -------------------------------------------------------------------------
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/app/src/main/res/values/strings.xml
+
+mobile/ios/.xcode.env.local
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/macos/Flutter/Generated.xcconfig
+mobile/macos/Flutter/flutter_export_environment.sh
+
+mobile/linux/flutter/ephemeral/
+mobile/windows/flutter/ephemeral/
+
+# Global rules (these don't need the prefix because they apply everywhere)
+.idea/
+*.iml
+.vscode/
+.DS_Store
