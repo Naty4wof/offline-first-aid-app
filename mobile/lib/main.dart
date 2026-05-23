@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -49,6 +51,12 @@ void main() async {
     await Hive.initFlutter();
     await StorageService.instance.init();
 
+    // Map caching initialization
+    if (!kIsWeb) {
+      await FMTCObjectBoxBackend().initialise();
+      await FMTCStore('hospitalMap').manage.create();
+    }
+
     final guideSync = GuideSyncService();
 
     try {
@@ -65,8 +73,8 @@ void main() async {
     await syncService.syncUser(); // try sync on app start
 
     // Mock map download
-    final mapService = MapDownloadService();
-    await mapService.downloadMapTiles();
+    // final mapService = MapDownloadService();
+    // await mapService.downloadMapTiles();
 
     // Data layer
     final dataSource = GuideLocalDataSource();

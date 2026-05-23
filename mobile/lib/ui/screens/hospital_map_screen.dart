@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:offline_first_aid_app/core/services/location_service.dart';
 import 'package:offline_first_aid_app/core/services/connectivity_service.dart';
@@ -30,7 +31,6 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
   bool _isOffline = false;
   HospitalModel? _selectedHospital;
   List<LatLng> _currentRoute = [];
-  String? _tilePath;
 
   @override
   void initState() {
@@ -38,7 +38,6 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
     context.read<HospitalBloc>().add(LoadHospitals());
     _checkConnectivity();
     _initLocation();
-    _initTilePath();
   }
 
   Future<void> _checkConnectivity() async {
@@ -46,15 +45,6 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
     if (mounted) {
       setState(() {
         _isOffline = !isConnected;
-      });
-    }
-  }
-
-  Future<void> _initTilePath() async {
-    final path = await _mapDownloadService.getTilePath();
-    if (mounted) {
-      setState(() {
-        _tilePath = path;
       });
     }
   }
@@ -121,12 +111,69 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
     );
   }
 
+  void _downloadCurrentRegion() {
+    final bounds = _mapController.camera.visibleBounds;
+    final downloadStream = _mapDownloadService.downloadRegion(bounds);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => StreamBuilder<DownloadProgress>(
+        stream: downloadStream,
+        builder: (context, snapshot) {
+          final progress = snapshot.data;
+          final percentage = progress?.percentageProgress ?? 0;
+          final isDone = progress?.isComplete ?? false;
+
+          if (isDone) {
+            Future.delayed(const Duration(seconds: 1), () {
+              if (Navigator.canPop(context)) Navigator.pop(context);
+            });
+          }
+
+          return AlertDialog(
+            title: const Text('ካርታውን በማውረድ ላይ...'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: percentage / 100),
+                const SizedBox(height: 10),
+                Text('${percentage.toStringAsFixed(1)}% ተጠናቋል'),
+                if (progress != null)
+                  Text(
+                    '${progress.successfulTiles} ከ ${progress.maxTiles} ተሳክቷል',
+                  ),
+              ],
+            ),
+            actions: [
+              if (!isDone)
+                TextButton(
+                  onPressed: () {
+                    // FMTC download can be cancelled if needed, but for simplicity we just close the dialog here.
+                    // A better way would be to cancel the stream/download.
+                    Navigator.pop(context);
+                  },
+                  child: const Text('ይቅር'),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ቅርብ ሆስፒታሎች'),
         actions: [
+          if (!kIsWeb)
+            IconButton(
+              icon: const Icon(Icons.download_for_offline),
+              onPressed: _downloadCurrentRegion,
+              tooltip: 'ይህንን አካባቢ አውርድ',
+            ),
           IconButton(
             icon: const Icon(Icons.sync),
             onPressed: () {
@@ -151,13 +198,16 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: (_isOffline && _tilePath != null)
-                        ? '$_tilePath/{z}/{x}/{y}.png'
-                        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.offline_first_aid_app',
-                    tileProvider: (_isOffline && !kIsWeb)
-                        ? FileTileProvider()
-                        : null,
+                    tileProvider: kIsWeb
+                        ? null
+                        : FMTCStore('hospitalMap').getTileProvider(
+                            settings: FMTCTileProviderSettings(
+                              behavior: CacheBehavior.onlineFirst,
+                            ),
+                          ),
                   ),
                   MarkerLayer(
                     markers: [
