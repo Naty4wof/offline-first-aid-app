@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../../../features/guides/domain/services/voice_live_service.dart';
+import '../component/chat/chat_message.dart';
 
 class VoiceLiveScreen extends StatefulWidget {
   const VoiceLiveScreen({super.key});
@@ -15,6 +16,7 @@ class _VoiceLiveScreenState extends State<VoiceLiveScreen>
   late final AnimationController _animationController;
   double _currentLevel = 0.0;
   VoiceSessionStatus _status = VoiceSessionStatus.disconnected;
+  final List<ChatMessage> _liveTranscripts = [];
 
   @override
   void initState() {
@@ -37,6 +39,14 @@ class _VoiceLiveScreenState extends State<VoiceLiveScreen>
       if (mounted) {
         setState(() {
           _status = status;
+        });
+      }
+    });
+
+    _voiceService.transcriptStream.listen((message) {
+      if (mounted) {
+        setState(() {
+          _liveTranscripts.add(message);
         });
       }
     });
@@ -82,6 +92,32 @@ class _VoiceLiveScreenState extends State<VoiceLiveScreen>
                     ? Colors.redAccent
                     : const Color(0xFF5F6F75),
                 fontSize: 16,
+              ),
+            ),
+            const Spacer(),
+            Expanded(
+              flex: 2,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: _liveTranscripts.length,
+                itemBuilder: (context, index) {
+                  final msg = _liveTranscripts[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      '${msg.isUser ? "እርስዎ: " : "ረዳት: "}${msg.text}',
+                      style: TextStyle(
+                        color: msg.isUser
+                            ? const Color(0xFF132125)
+                            : const Color(0xFF2E9B59),
+                        fontSize: 14,
+                        fontStyle: msg.isUser
+                            ? FontStyle.normal
+                            : FontStyle.italic,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             const Spacer(),
